@@ -1,0 +1,451 @@
+<html>
+<head>
+    <title>Goosepy</title>
+    <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dice.css">
+    <link rel="icon" type="image/png" sizes="192x192" href="img/dice-192w.png">
+    <link rel="icon" type="image/png" sizes="180x180" href="img/dice-180w.png">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
+</head>
+<body >
+    <audio id="myAudio" src="vittoria.mp3"></audio>
+    <div id="pag1" style="background-image: url('img/goosepy.jpg');">
+            <div class="scendi" style="background-image: url('img/title.png');">
+            <label id="avvio" onclick="pagina2()">Gioca</label>
+        </div>
+    </div>
+    <div id="pag2" style="background-image: url('img/background1.png');">
+        <div id="main"  style="background-image: url('img/background.png');" >
+            <img id="titleBis" src="img/title.png" onclick="riavviaPagina()" style="width: 15%;">
+                <img id="duck" src="img/duck.png">      
+            <div class="modal-container">
+                <input id="modal-toggle" type="checkbox">
+                <div id="myButton">
+                    <label class="modal-btn" id="animatedButton" for="modal-toggle" onclick="apri()">Tira il dado</label> 
+                </div>
+                <label class="modal-backdrop" for="modal-toggle"></label>
+                <div class="modal-content"  >
+                  <label class="modal-close" for="modal-toggle" >&#x2715;</label>
+                  <h2>Tira il dado</h2><hr />
+                  <p>Clicca sul dado per farlo girare!</p> 
+                  <div id="fullscreenArea">
+                    <div id="sceneArea">
+                        <section id="scene" data-roll-count-mod5="0" data-number-style="dots" data-dice-num="2">
+                            <div class="diePad">
+                                <div class="die" data-result="1">
+                                    <div class="face face-1">
+                                        <span>1</span>
+                                        <svg viewBox="0 0 4 4">
+                                            <circle r="0.4" cx="2" cy="2" />
+                                        </svg>
+                                    </div>
+                                    <div class="face face-2">
+                                        <span>2</span>
+                                        <svg viewBox="0 0 4 4">
+                                            <circle r="0.4" cx="3" cy="1" />
+                                            <circle r="0.4" cx="1" cy="3" />
+                                        </svg>
+                                    </div>
+                                    <div class="face face-3">
+                                        <span>3</span>
+                                        <svg viewBox="0 0 4 4">
+                                            <circle r="0.4" cx="3" cy="1" />
+                                            <circle r="0.4" cx="2" cy="2" />
+                                            <circle r="0.4" cx="1" cy="3" />
+                                        </svg>
+                                    </div>
+                                    <div class="face face-4">
+                                        <span>4</span>
+                                        <svg viewBox="0 0 4 4">
+                                            <circle r="0.4" cx="1" cy="1" />
+                                            <circle r="0.4" cx="3" cy="1" />
+                                            <circle r="0.4" cx="1" cy="3" />
+                                            <circle r="0.4" cx="3" cy="3" />
+                                        </svg>
+                                    </div>
+                                    <div class="face face-5">
+                                        <span>5</span>
+                                        <svg viewBox="0 0 4 4">
+                                            <circle r="0.4" cx="1" cy="1" />
+                                            <circle r="0.4" cx="3" cy="1" />
+                                            <circle r="0.4" cx="2" cy="2" />
+                                            <circle r="0.4" cx="1" cy="3" />
+                                            <circle r="0.4" cx="3" cy="3" />
+                                        </svg>
+                                    </div>
+                                    <div class="face face-6">
+                                        <span>6</span>
+                                        <svg viewBox="0 0 4 4">
+                                            <circle r="0.4" cx="1" cy="1" />
+                                            <circle r="0.4" cx="3" cy="1" />
+                                            <circle r="0.4" cx="1" cy="2" />
+                                            <circle r="0.4" cx="3" cy="2" />
+                                            <circle r="0.4" cx="1" cy="3" />
+                                            <circle r="0.4" cx="3" cy="3" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                <input id="risposta" type="number" readonly>
+                </input>
+                  <label class="modal-content-btn" id="modal-content-btn" for="modal-toggle" onclick="reset()" pys-onclick="muoviOca">Vai!</label>   
+                </div>     
+              </div> 
+        </div>
+        <div id="popup1" class="overlay" style="display: none;">
+            <div class="popup">
+                <div class="content">
+                    <h3 id="admin-title"></h3><hr><p id="t1">Tempo a disposizione:</p><div id="countdown"> </div>
+                    <p id="admin-content"></p><p id = "paragraf"></p><input id="admin-answer" type="text" style="width: 30px;">
+                    <button id="btn1" onclick="controlla()">Verifica</button>
+                </div>
+            </div>
+        </div>
+        <div id="popup2" class="overlay" style="display: none;">
+            <div class="popup">
+                <div class="content">
+                    <h3 id="admin-title1"></h3><hr><div id="countdown">Mi dispiace </div>
+                    <p id="alert">tornerai indietro di una casella</p>
+                    <button id="btn2" onclick="closePopup1(); startAnimation()" pys-onclick="tornaIndietro" >ok</button>
+                </div>
+            </div>
+        </div>
+        <div id="popup3" class="overlay" style="display: none;">
+            <div class="popup">
+                <div class="content">
+                    <h3 id="admin-title2"></h3><hr><p id="t"></p>
+                </div>
+                    <p id="admin-content1"></p><p id = "subtitle"></p> 
+                    <input id="admin-answer1" type="text" style="width: 30px;">
+                    <button id="btn3" onclick="controllaBis()">Verifica</button>
+            </div>
+        </div>
+        <div id="popup4" class="overlay" style="display: none;">
+            <div class="popup">
+                <div class="content">
+                    <h3 id="title_tris"></h3><hr><p id="content_tris"></p></div>
+                    <div id="container">
+                        <div class="input-box"><input class="quadratini" id="1_1" type="text" value="1"disabled></div>
+                        <div class="input-box"><input class="quadratini" id="1_2" type="text" value="+"disabled></div>
+                        <div class="input-box"><input class="quadratini" id="1_3" type="text" value=""></div>
+                        <div class="input-box"><input class="quadratini" id="1_4" type="text" value="="disabled></div>
+                        <div class="input-box"><input class="quadratini" id="1_5" type="text" value="6"disabled></div>
+
+                        <div class="input-box"><input class="quadratini" id="2_1" type="text" value="+"disabled></div>
+                        <div class="input-box"><input class="quadratini" id="2_2" type="text" value=""disabled style="background-color: black;"></div>
+                        <div class="input-box"><input class="quadratini" id="2_3" type="text" value="-"disabled></div>
+                        <div class="input-box"><input class="quadratini" id="2_4" type="text" value=""disabled style="background-color: black;"></div>
+                        <div class="input-box"><input class="quadratini" id="2_5" type="text" value="+"disabled></div>
+
+                        <div class="input-box"><input class="quadratini" id="3_1" type="text" value=""></div>
+                        <div class="input-box"><input class="quadratini" id="3_2" type="text" value="-"disabled></div>
+                        <div class="input-box"><input class="quadratini" id="3_3" type="text" value="3"disabled></div>
+                        <div class="input-box"><input class="quadratini" id="3_4" type="text" value="="disabled></div>
+                        <div class="input-box"><input class="quadratini" id="3_5" type="text" value="4"disabled></div>
+
+                        <div class="input-box"><input class="quadratini" id="4_1" type="text" value="="disabled></div>
+                        <div class="input-box"><input class="quadratini" id="4_2" type="text" value=""disabled style="background-color: black;"></div>
+                        <div class="input-box"><input class="quadratini" id="4_3" type="text" value="="disabled></div>
+                        <div class="input-box"><input class="quadratini" id="4_4" type="text" value=""disabled style="background-color: black;"></div>
+                        <div class="input-box"><input class="quadratini" id="4_5" type="text" value="="disabled></div>
+
+                        <div class="input-box"><input class="quadratini" id="5_1" type="text" value="8"disabled></div>
+                        <div class="input-box"><input class="quadratini" id="5_2" type="text" value="+"disabled></div>
+                        <div class="input-box"><input class="quadratini" id="5_3" type="text" value=""></div>
+                        <div class="input-box"><input class="quadratini" id="5_4" type="text" value="="disabled></div>
+                        <div class="input-box"><input class="quadratini" id="5_5" type="text" value=""></div>
+                    </div>
+                    <button id="btn1" onclick="controllaTris(1)">Verifica</button>
+                </div>
+            </div>
+        <div id="popup5" class="overlay" style="display: none;">
+            <div class="popup">
+                <div class="content">
+                    <h3 id="title_4"></h3><hr><p id="content_4"></p></div>
+                    <div id="container">
+                        <div class="input-box"><input class="quadratini"  type="text" value="5"disabled></div>
+                        <div class="input-box"><input class="quadratini"  type="text" value="x"disabled></div>
+                        <div class="input-box"><input class="quadratini" id="one_3" type="text" value=""></div>
+                        <div class="input-box"><input class="quadratini"  type="text" value="="disabled></div>
+                        <div class="input-box"><input class="quadratini" type="text" value="50"disabled></div>
+
+                        <div class="input-box"><input class="quadratini"  type="text" value="x"disabled></div>
+                        <div class="input-box"><input class="quadratini"  type="text" value=""disabled style="background-color: black;"></div>
+                        <div class="input-box"><input class="quadratini" type="text" value="x"disabled></div>
+                        <div class="input-box"><input class="quadratini" type="text" value=""disabled style="background-color: black;"></div>
+                        <div class="input-box"><input class="quadratini" type="text" value=":"disabled></div>
+
+                        <div class="input-box"><input class="quadratini" id="three_1" type="text" value=""></div>
+                        <div class="input-box"><input class="quadratini" type="text" value="x"disabled></div>
+                        <div class="input-box"><input class="quadratini" type="text" value="2"disabled></div>
+                        <div class="input-box"><input class="quadratini" type="text" value="="disabled></div>
+                        <div class="input-box"><input class="quadratini" type="text" value="2"disabled></div>
+
+                        <div class="input-box"><input class="quadratini" type="text" value="="disabled></div>
+                        <div class="input-box"><input class="quadratini" type="text" value=""disabled style="background-color: black;"></div>
+                        <div class="input-box"><input class="quadratini" type="text" value="="disabled></div>
+                        <div class="input-box"><input class="quadratini" type="text" value=""disabled style="background-color: black;"></div>
+                        <div class="input-box"><input class="quadratini" type="text" value="="disabled></div>
+
+                        <div class="input-box"><input class="quadratini" type="text" value="5"disabled></div>
+                        <div class="input-box"><input class="quadratini" type="text" value="+"disabled></div>
+                        <div class="input-box"><input class="quadratini" id="five_3" type="text" value=""></div>
+                        <div class="input-box"><input class="quadratini" type="text" value="="disabled></div>
+                        <div class="input-box"><input class="quadratini" id="five_5" type="text" value=""></div>
+                    </div>
+                    <button id="btn1" onclick="controllaTris(2)">Verifica</button>
+                </div>
+            </div>
+        <div id="popup6" class="overlay" style="display: none;">
+            <div class="popup">
+                <div class="content">
+                    <h3 id="title_5"></h3><hr><p id="content_5"></p>
+                </div>
+                    <div id="container">
+                        <div class="input-box"><input class="quadratini"  type="text" value="60"disabled></div>
+                        <div class="input-box"><input class="quadratini"  type="text" value="+"disabled></div>
+                        <div class="input-box"><input class="quadratini" id="1_three" type="text" value=""></div>
+                        <div class="input-box"><input class="quadratini"  type="text" value="="disabled></div>
+                        <div class="input-box"><input class="quadratini" type="text" value="80"disabled></div>
+
+                        <div class="input-box"><input class="quadratini"  type="text"value=":"disabled></div>
+                        <div class="input-box"><input class="quadratini" type="text" value=""disabled style="background-color: black;"></div>
+                        <div class="input-box"><input class="quadratini" type="text" value=":"disabled></div>
+                        <div class="input-box"><input class="quadratini" type="text" value=""disabled style="background-color: black;"></div>
+                        <div class="input-box"><input class="quadratini" type="text" value=":"disabled></div>
+
+                        <div class="input-box"><input class="quadratini" id="3_one" type="text" value=""></div>
+                        <div class="input-box"><input class="quadratini" type="text" value="-"disabled></div>
+                        <div class="input-box"><input class="quadratini" type="text" value="2"disabled></div>
+                        <div class="input-box"><input class="quadratini" type="text" value="="disabled></div>
+                        <div class="input-box"><input class="quadratini" type="text" value="4"disabled></div>
+
+                        <div class="input-box"><input class="quadratini" type="text" value="="disabled></div>
+                        <div class="input-box"><input class="quadratini" type="text" value=""disabled style="background-color: black;"></div>
+                        <div class="input-box"><input class="quadratini" type="text" value="="disabled></div>
+                        <div class="input-box"><input class="quadratini" type="text" value=""disabled style="background-color: black;"></div>
+                        <div class="input-box"><input class="quadratini" type="text" value="="disabled></div>
+
+                        <div class="input-box"><input class="quadratini" type="text" value="10"disabled></div>
+                        <div class="input-box"><input class="quadratini" type="text" value="+"disabled></div>
+                        <div class="input-box"><input class="quadratini" id="5_three" type="text" value=""></div>
+                        <div class="input-box"><input class="quadratini" type="text" value="="disabled></div>
+                        <div class="input-box"><input class="quadratini" id="5_five" type="text" value=""></div>
+                    </div>
+                    <button id="btn1" onclick="controllaTris(3)">Verifica</button>
+            </div>
+        </div>
+        <div id="popup7" class="overlay" style="display: none;">
+            <div class="popup">
+                <div class="content">
+                    <h3 >Complimenti!!</h3><hr>
+                </div>
+                <p>
+                    Hai trovato un passaggio segreto.. avanzerai di 2 caselle!
+                </p>
+                <button id="btn4" pys-onclick="porta">Vai</button>
+            </div>
+        </div>
+        <div id="game" style="display: none;">
+            <h2 id="titolo">Gioca con il confronto tra numeri!</h2>
+            <div id="number_one"></div>
+            <select id="confronto" class="visible">
+                <option value="minore">&lt;</option>
+                <option value="maggiore">&gt;</option>
+                <option value="uguale">=</option>
+            </select>
+            <div id="number_two"></div>
+            <button id="button-verifica" class="visible" onclick="controllo()">Verifica</button>
+            <div id="risultato"></div>
+        </div>
+        <div id="overlay1"></div>
+        <div id="victory" class="popup-wrap">
+            <div class="popup-box">
+                <img src="img/giphy.gif" alt="">
+                <img src="img/win_title.png" style="width: 700px;">
+                <button id="closeBtnBis" class="popup-close" onclick="chiudiPopup()">Rigioca</button>
+            </div>
+            </div>
+        </div>
+    </div>
+    <py-script>
+        import random
+        import js <!-- importo la libreria js che mi permetterà di richiamare le funzioni js all'interno del codice -->
+        import asyncio <!--importo asyncio per poter inserire delle pause tra le varie esecuzioni delle funzioni js nel ciclo per assicurarmi che ogni esecuzione venga completata prima di iniziare l'altra-->
+        pos = 0  <!--inizializzo  la variabile globale pos a 0, la metto globale perchè è necessario che mantenga il precedente valore e non si riazzeri ad ogni esecuzione-->
+        js.scrolla()<!--richiamo la funzione che mi porta all inizio della pagina all'avvio/riavvio-->
+        def operazioni(a):<!-- questa funzione esegue delle operazioni matematiche di 3 livelli, che vengono stabilite dal parametro a che gli viene passato -->
+            js.operazione()<!-- richiamo la funzione js che apre il popup nella quale verrà realizzato il gioco -->
+            if a == 1:
+                Element("admin-title").write("Esegui le operazioni - Livello 1")
+                Element("countdown").write("illimitato")
+                num1 = random.randint(1, 10)
+                num2 = random.randint(1, 10)
+                operator = random.choice(['+', '-', '*'])
+                if operator == '+':
+                    correct_answer = num1 + num2
+                elif operator == '-':
+                    correct_answer = num1 - num2
+                elif operator == '*':
+                    correct_answer = num1 * num2
+                Element("admin-content").write(f"{num1} {operator} {num2}")  
+                <!-- in questa parte del codice ho quindi generato due numeri casuali da 1 a 10 e selezionato casualmente un operatpre matematico, stampando poi a video il quesito matematico da risolvere -->
+            elif a == 2:
+                Element("admin-title").write("Esegui le operazioni - Livello 2")
+                num1 = random.randint(1, 10)
+                num2 = random.randint(1, 10)
+                operator = random.choice(['+', '-', '*'])
+                if operator == '+':
+                    correct_answer = num1 + num2
+                elif operator == '-':
+                    correct_answer = num1 - num2
+                elif operator == '*':
+                    correct_answer = num1 * num2
+                Element("admin-content").write(f"{num1} {operator} {num2}")
+                js.countToTenInSeconds(10)
+                <!-- la stessa cosa faccio nel secondo livello, in cui però richiamo poi una funzione js che permette all'utente di inserire il risultato del quesito solo entro 10 secondi -->
+            elif a == 3:
+                Element("admin-title").write("Esegui le operazioni - Livello 3")
+                num1 = random.randint(1, 10)
+                num2 = random.randint(1, 10)
+                operator = random.choice(['+', '-', '*'])
+                if operator == '+':
+                    correct_answer = num1 + num2
+                elif operator == '-':
+                    correct_answer = num1 - num2
+                elif operator == '*':
+                    correct_answer = num1 * num2
+                Element("admin-content").write(f"{num1} {operator} {num2}")
+                js.countToTenInSeconds(5)
+                <!-- la stessa cosa faccio nel terzo livello, questa volta però l'utente avrà 5 secondi a disposizione -->
+                <!-- è importante sottolineare che le funzioni di controllo di correttezza della risposta si trovano nello script js e sono richiamate in un bottone del pop up stesso-->
+        def casual(a): <!-- anche questo gioco e a più livelli e la scelta del livello dipende dal parametro a, in questo gioco l'obiettivo è quello di indovinare il numero casuale generato dal programma -->
+            js.operazioneBis()
+            if a == 1:
+                Element("t").write(3)
+                Element("admin-title2").write("Indovina il numero (da 1 a 10) - Livello 1(3 tentativi)")   
+                num1 = random.randint(1, 10)
+                Element("admin-content1").write(num1)
+                <!-- nel primo livello si hanno 3 tentativi a disposizione -->
+            elif a == 2:
+                Element("t").write(2)
+                Element("admin-title2").write("Indovina il numero (da 1 a 10) - Livello 2(2 tentativi)")   
+                num1 = random.randint(1, 10)
+                Element("admin-content1").write(num1)
+                <!-- nel secondo livello si hanno 2 tentativi -->
+            elif a == 3:
+                Element("t").write(1)
+                Element("admin-title2").write("Indovina il numero (da 1 a 10) - Livello 3(1 tentativo)")   
+                num1 = random.randint(1, 10)
+                Element("admin-content1").write(num1) 
+                <!-- nel terzo livello si ha una sola possibilità di indovinare -->
+        def cruciverba(a):<!-- anche questo gioco è a più livelli e la scelta del livello dipende dal parametro a. Qui l'utente si troverà un popup contenente un cruciverba numerico da risolvere -->
+            if a == 1:
+                js.openPopup()
+                Element("title_tris").write("Completa il cruciverba - Livello 1")
+                <!-- nel primo livello si inserisce il titolo e si richiama la funzione js che apre il popup contenente il primo cruciverba -->
+            elif a == 2:
+                js.openPopup1()
+                Element("title_4").write("Completa il cruciverba - Livello 2")
+            elif a == 3:
+                js.openPopup2()
+                Element("title_5").write("Completa il cruciverba - Livello 3")
+                <!-- la stessa cosa menzionata nel primo livello, avviene per gli altri 2 -->
+        async def porta(a):<!-- in questa funzione invece il personaggio del gioco verrà spostato in avanti di 2 caselle, come se l'utente avesse trovato un sottopassaggio! -->
+            global pos<!-- richiamo la variabile globale pos in quanto mi servirà per aggiornare la posizione del personaggio dopo lo spostamento -->
+            js.closePopup6()<!-- con questa funzione js chiudo il popup che avvisa l'utente di aver trovato il sottopassaggio -->
+            for i in range(2):<!-- creo un ciclo in cui il mio contatore i viene incrementato finchè è minore di 2, numero di spostamenti da effettuare -->
+                pos += 1  <!-- incremento di uno la posizione, essendo che sto per fare il primo dei due spostamenti nel tabellone -->
+                if pos in {1, 2, 3, 4, 13, 14, 15, 16}:<!-- tramite dei controlli individuo la posizione del mio personaggio e di conseguenza decido in che direzione farlo muovere -->
+                    js.moveUp()<!-- utilizzo funzioni js che fanno muovere il mio personaggio -->
+                    await asyncio.sleep(0.5)<!-- inserisco la pausa dopo l'esecuzione della funzione, per evitare problemi di sincronizzazione-->
+                elif pos in {5, 6, 17, 18, 11, 12}:
+                    js.moveRight()
+                    await asyncio.sleep(0.5)
+                elif pos in {7, 8, 9, 10, 19, 20}:
+                    js.moveDown()
+                    await asyncio.sleep(0.5)
+                elif pos == 21:
+                    js.moveDownEnd()
+                    await asyncio.sleep(0.5) 
+                    <!-- effettuo il controllo per tutte le posizioni -->
+        def gioca(a):<!-- questa funzione implementa un altro gioco in cui vengono generati due numeri casuali e l'utente deve scegliere il segno da mettere tra di essi(<,>,=)-->
+            js.gioca1()<!-- richiamo la funzione che apre il popup -->
+            num1 = random.randint(1, 100)<!-- genero il primo numero casuale -->
+            num2 = random.randint(1, 100)<!-- e anche il secondo -->
+            Element("number_one").write(num1)<!-- stampo i numeri usciti -->
+            Element("number_two").write(num2)
+            <!-- anche qui il controllo verrà poi effettuato su js e richiamato tramite un bottone presente nel popup -->
+        def sfide():<!-- questa è una delle principali funzioni, ovvero quella che controlla la posizione del personaggio e in base ad essa richiama la funzione del gioco a cui è associata quella determinata funzione -->
+            if pos in {9, 18}:
+                js.stallo()<!-- questa è una funzione js che mostra un alert che avvisa l'utente che è presente una fase di stallo nella posizione in cui si trova e che di conseguenza non avverrà nulla -->
+            elif  pos in {2, 8, 14}:
+                if pos == 2:
+                    operazioni(1)
+                elif pos == 8:
+                    operazioni(2)
+                elif pos == 14:
+                    operazioni(3)
+            elif pos in {5, 11, 17, 20}:
+                js.avvisoIndietro()
+                tornaIndietro(pos)
+            elif pos in{3, 10, 15}:
+                if pos == 3:
+                    casual(1)
+                elif pos == 10:
+                    casual(2)
+                elif pos == 15:
+                    casual(3) 
+            elif pos in{7, 13, 19}:
+                if pos == 7:
+                    cruciverba(1)
+                elif pos == 13:
+                    cruciverba(2)
+                elif pos == 19:
+                    cruciverba(3)
+            elif pos in{4, 12}:
+                js.avvisoPorta()
+            elif pos in{1, 16, 6}:
+                gioca(1)
+            elif pos == 21:
+                js.showPopup()
+                <!-- come si può vedere faccio i controlli per tutte le posizioni e per alcune, richiamando la funzione, passo anche il parametro che poi corrisponde al livello del gioco a cui è associata quella determinata posizione -->
+        async def muoviOca(a):<!--creo la mia funzione asincrona muoviOca, fondamentale poichè necessaria per poter muovere il mio personaggio nel gioco-->
+            x = int(Element("risposta").value)<!--x rappresenta il risultato del lancio del dado, il cui valore si trova nell'input nascosto "risposta", faccio quindi il casting per ottenere il valore intero-->
+            global pos<!--richiamo la variabile globale inizializzata in precedenza "pos" per poter aggiornare la posizione a ogni spostamento-->
+            for i in range(x):<!-- creo un ciclo in cui il mio contatore i viene incrementato finchè è minore di x(numero del dado) -->
+                pos += 1  <!-- incremento di uno la posizione, essendo che sto per fare il primo spostamento nel tabellone -->
+                if pos in {1, 2, 3, 4, 13, 14, 15, 16}:<!-- tramite dei controlli individuo la posizione del mio personaggio e di conseguenza decido in che direzione farlo muovere -->
+                    js.moveUp()<!-- utilizzo funzioni js che fanno muovere il mio personaggio -->
+                    await asyncio.sleep(0.5)<!-- inserisco la pausa dopo l'esecuzione della funzione, per evitare problemi di sincronizzazione-->
+                elif pos in {5, 6, 17, 18, 11, 12}:
+                    js.moveRight()
+                    await asyncio.sleep(0.5)
+                elif pos in {7, 8, 9, 10, 19, 20}:
+                    js.moveDown()
+                    await asyncio.sleep(0.5)
+                elif pos == 21:
+                    js.moveDownEnd()
+                    await asyncio.sleep(0.5)
+                    js.showPopup()
+            sfide()
+        def tornaIndietro(a):<!-- questa funzione è associata a una penitenza del gioco, in cui appunto il personaggio torna indietro in 2 occasioni, o se l'utente sbaglia una delle sfide oppure se becca delle caselle di penitenza -->
+            global pos<!--richiamo la variabile globale inizializzata in precedenza "pos"-->
+            if pos in {1, 2, 3, 4, 13, 14, 15, 16}:<!-- tramite dei controlli individuo la posizione del mio personaggio e di conseguenza decido in che direzione farlo muovere -->
+                js.moveDown()<!-- utilizzo funzioni js che fanno muovere il mio personaggio -->
+            elif pos in {5, 6, 17, 18, 11, 12}:
+                js.moveLeft()
+            elif pos in {7, 8, 9, 10, 19, 20, 21}:
+                js.moveUp()
+            pos-=1
+    </py-script>
+    <script defer src="js/script.js"></script>
+</body>
+</html>
